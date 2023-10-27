@@ -1,0 +1,40 @@
+import pdfplumber
+import os
+import pandas as pd
+from anonimizacao.src.uteis import dataframe_uteis as f_df
+from anonimizacao.src.uteis import anonimizar_uteis as f_anonimizar
+from anonimizacao.src.uteis import arquivo_uteis as f_arquivo
+
+def gerar_boletins_anonimizados():
+    print(f"Começou a extração de dados do pdf para os csv.")
+    diretorio_boletins = "analise_boletins/src/boletins/"
+
+    if os.path.isfile('analise_boletins/src/boletins/junçao.csv'):
+        os.remove('analise_boletins/src/boletins/junçao.csv')
+        f_arquivo.apagar_pasta('analise_boletins/src/boletins/csv')
+        print(f"Os arquivos da análise anterior foram limpos com sucesso.")
+
+    lista_pastas = f_arquivo.obter_pastas_pasta(diretorio_boletins)
+
+
+    for nome_pasta_curso in lista_pastas:
+        lista_arquivos = f_arquivo.obter_arquivos_pasta(f'{diretorio_boletins}{nome_pasta_curso}')
+        for nome_arquivo in lista_arquivos:
+            diretorio_atual = diretorio_boletins + nome_pasta_curso
+            nome_arquivo = nome_arquivo.replace('.pdf', '')
+            
+            arquivo = f_df.abrir_arquivo(f'{diretorio_atual}/{nome_arquivo}.pdf')
+            boletins = f_df.formatar_dataframe(arquivo, nome_arquivo+".pdf")                                    
+                
+            f_arquivo.criar_pasta(f'{diretorio_boletins}/csv')
+            
+            boletins.to_csv(f'{diretorio_boletins}/csv/{nome_arquivo}.csv', index=False)
+
+            boletins, relacao = f_anonimizar.anonimizar(boletins)
+
+            boletins.to_csv(f'{diretorio_boletins}/csv/{nome_arquivo}_Anonimizado.csv', index=False)
+            relacao.to_csv(f'{diretorio_boletins}/csv/Relacao.csv', index=False)
+            print(f"{nome_arquivo}_Anonimizado.csv anonimizado e finalizado com sucesso")
+
+
+    print(f"Os dados dos boletins foram extraídos com sucesso em csv.")
