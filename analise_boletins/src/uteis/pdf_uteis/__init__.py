@@ -125,6 +125,8 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
 
         for disciplina in ano:
             
+            total_alunos_disciplina = (analise_disciplina.distribuicao_freq_aprovados['Frequência Absoluta'][5]) # total de notas -> (total de alunos)
+
             analise_disciplina = encontrar_analise(disciplina[0], analise_curso.lista_analise_disciplinas, 'disciplina')
             
             tabela_distribuicao_freq_aprovados = padronizar_df(analise_disciplina.distribuicao_freq_aprovados)
@@ -135,6 +137,7 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
             textos = [
                 str(analise_disciplina.ano)+"° ano",
                 analise_disciplina.nome + " (" + analise_disciplina.sigla + ")",
+                "Nessa disciplina foram avaliados um total de" + total_alunos_disciplina + " Alunos.",
                 "Distribuição de frequência de  aprovados e reprovados no componente curricular "+ analise_disciplina.nome + " (" + analise_disciplina.sigla + ")",
                 "Gráfico de setores de aprovados e reprovados usando frequência relativa no componente curricular "+analise_disciplina.sigla,
                 "Distribuição de frequências de notas de alunos no componente curricular "+analise_disciplina.sigla,
