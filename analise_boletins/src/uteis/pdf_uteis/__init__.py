@@ -83,13 +83,13 @@ def adicionar_marcadores(pdf_file, ano):
         c.addOutlineEntry(disciplina_acronym, disciplina_name)
     c.save()
     
-def gerar_pdf(analise_curso, tupla_disciplinas):
-    if not os.path.exists('resultados/'):
-        os.makedirs('resultados/')
+def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
+    if not os.path.exists(f'{caminho}resultados/'):
+        os.makedirs(f'{caminho}resultados/')
 
-    script_directory = os.path.dirname("resultados/")
+    script_directory = os.path.dirname(f"{caminho}resultados/")
     
-    pdf_file = os.path.join(script_directory, 'analise_completa.pdf')
+    pdf_file = os.path.join(script_directory, f'analise_completa_{analise_curso.nome}.pdf')
     doc = SimpleDocTemplate(
         pdf_file,
         pagesize=A4,
