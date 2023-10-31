@@ -5,33 +5,41 @@ from analise_boletins.src.uteis import calcular_uteis as calc
 from analise_boletins.src.uteis import formatar_uteis as frmt
 from analise_boletins.src.uteis import model_uteis as modl
 from analise_boletins.src.uteis import pdf_uteis as pdf
+from anonimizacao.src.uteis import arquivo_uteis as f_arquivo
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 
 def gerar_juncao_csv():
-    diretorio = 'analise_boletins/src/boletins/csv/'
-    dataframes = []
-    if os.path.isfile('analise_boletins/src/boletins/junçao.csv'):
-        os.remove('analise_boletins/src/boletins/junçao.csv')
-        print(f"O arquivo csv com a junção anterior foi excluído com sucesso.")
+    lista_cursos = f_arquivo.obter_pastas_pasta('analise_boletins/src/boletins/')
+    lista_cursos = f_arquivo.ordenar_pastas(lista_cursos)
+    array_diretorios = []
+    for curso in lista_cursos:
+        diretorio = f'analise_boletins/src/boletins/{curso}/csv/'
+        dataframes = []
+        if os.path.isfile(f'{diretorio}Boletim_Geral.csv'):
+            os.remove(f'{diretorio}Boletim_Geral.csv')
+            print(f"O arquivo csv com a junção anterior foi excluído com sucesso.")
 
-    for arquivo in os.listdir(diretorio):
-        if arquivo.endswith('.csv'):
-            caminho_arquivo = os.path.join(diretorio, arquivo)
-            df = pd.read_csv(caminho_arquivo)
-            dataframes.append(df)
+        for arquivo in os.listdir(f'{diretorio}'):
+            if arquivo.endswith('.csv'):
+                caminho_arquivo = os.path.join(diretorio, arquivo)
+                print(diretorio)
+                print(caminho_arquivo)
+                df = pd.read_csv(caminho_arquivo)
+                dataframes.append(df)
 
-    df_final = pd.concat(dataframes, ignore_index=True)
-    df_final.to_csv('analise_boletins/src/boletins/junçao.csv', index=False)
-    return df_final
+        df_final = pd.concat(dataframes, ignore_index=True)
+        df_final.to_csv(f'{diretorio}Boletim_Geral.csv', index=False)
+        array_diretorios.append(f'{diretorio}Boletim_Geral.csv')
+    return array_diretorios
 
 print('Todos csvs foram juntados com sucesso.')
 
 print('Formatação do csv.')
 def formatar_juncao_csv():
     # Fazer código para entrada de csvs etc
-    df = pd.read_csv('analise_boletins/src/boletins/junçao.csv')
+    df = pd.read_csv('analise_boletins/src/boletins/Boletim_Geral.csv')
 
     df = frmt.renomear_colunas(df)
     df = frmt.deleta_notas(df)
@@ -94,7 +102,7 @@ def gerar_pdf_final(df):
     pdf.gerar_pdf(analise_curso, tupla_disciplinas)
 
 def gerar_analise_boletins():
-    gerar_juncao_csv()
-    df = formatar_juncao_csv()
-    gerar_pdf_final(df)
-    print('Análise disponível em resultados.')
+    gerar_juncao_csv() # dando erro por enquanto, pois Josineudo esta arrumando os caminhos
+    # df = formatar_juncao_csv()
+    # gerar_pdf_final(df)
+    # print('Análise disponível em resultados.')

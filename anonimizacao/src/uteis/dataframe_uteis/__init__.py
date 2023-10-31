@@ -6,6 +6,9 @@ import os
 def abrir_arquivo(caminho_arquivo):
     return pdfplumber.open(caminho_arquivo)
 
+def fechar_arquivo(arquivo):
+    arquivo.close()
+
 
 def extrair_ano_e_periodo(caminho_arquivo):
     nome_arquivo = os.path.basename(caminho_arquivo)

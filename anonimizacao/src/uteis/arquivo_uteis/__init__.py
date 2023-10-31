@@ -8,6 +8,10 @@ def criar_pasta(nome_pasta):
         except OSError:
             print ("A criação da pasta %s falhou" % nome_pasta)
 
+def ordenar_pastas(lista_pastas):
+    lista_pastas.sort()
+    return lista_pastas
+
 def apagar_pasta(pasta):
     if os.path.exists(pasta):
         for nome_arquivo in os.listdir(pasta):
