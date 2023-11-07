@@ -14,7 +14,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
 def calcularTamanhoImagem(imagem_original, doc, margem_esquerda, margem_direita, margem_superior, margem_inferior):
-
+    
     imagem = PILImage.open(imagem_original)
 
     largura_disponivel = doc.width - margem_esquerda - margem_direita
