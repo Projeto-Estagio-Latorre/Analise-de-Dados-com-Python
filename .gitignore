@@ -1,2 +1,3 @@
 myenv
 analise_boletins/src/boletins/*
+!analise_boletins/src/boletins/.gitkeep

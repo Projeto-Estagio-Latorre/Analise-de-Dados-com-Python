@@ -102,8 +102,8 @@ def retorna_frequencia_relativa(df, sigla):
 
     frequencia_relativa_ordenada = frequencia_relativa.reindex(ordenacao)
 
-    print('frequencia relativa: ', frequencia_relativa)
-    print('frequencia relativa ordenada: ', frequencia_relativa_ordenada)
+    # print('frequencia relativa: ', frequencia_relativa)
+    # print('frequencia relativa ordenada: ', frequencia_relativa_ordenada)
 
     return frequencia_relativa_ordenada
 
@@ -293,7 +293,7 @@ def graf_freq_aprovados(ano, df):
 
     analise.reset_index()
     try:
-        print("Salvando gráfico do ano " + str(ano))
+        print(f"Salvando gráfico do ano [{str(ano)}/4]")
         plot = analise.plot(kind='bar', y=['Aprovado %', 'Reprovado %', 'Aprovado por bloco ou conselho %'], figsize=(25, 6))
         plot.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1),
           fancybox=True, shadow=True, ncol=5)

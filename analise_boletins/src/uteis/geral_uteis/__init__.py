@@ -15,14 +15,17 @@ def gerar_juncao_csv():
     lista_cursos = f_arquivo.ordenar_pastas(lista_cursos)
     array_boletim_geral = []
     for curso in lista_cursos:
+        print(f"Juntando csvs do curso {curso}.")
         diretorio = f'analise_boletins/src/boletins/{curso}/csv/'
         dataframes = []
         if os.path.isfile(f'{diretorio}Boletim_Geral.csv'):
             os.remove(f'{diretorio}Boletim_Geral.csv')
             print(f"O arquivo csv com a junção anterior foi excluído com sucesso.")
-
+        contador_arquivo = 0
         for arquivo in os.listdir(f'{diretorio}'):
             if arquivo.endswith('.csv'):
+                contador_arquivo += 1
+                print(f"Juntando csv {arquivo} [{contador_arquivo}/{len(os.listdir(diretorio))}]")
                 caminho_arquivo = os.path.join(diretorio, arquivo)
                 df = pd.read_csv(caminho_arquivo)
                 dataframes.append(df)
@@ -38,6 +41,7 @@ def formatar_juncao_csv(array_boletim_geral):
     # Fazer código para entrada de csvs etc
     array_dfs = []
     for arquivo in array_boletim_geral:
+        print(f"Formatando csv {arquivo}.")
         df = pd.read_csv(arquivo)
 
         df = frmt.renomear_colunas(df)
@@ -56,13 +60,16 @@ def gerar_pdf_final(array_dfs):
     lista_cursos = f_arquivo.obter_pastas_pasta('analise_boletins/src/boletins/')
     lista_cursos = f_arquivo.ordenar_pastas(lista_cursos)
     diretorios = []
+    contador = 0
     for curso in lista_cursos:
+        contador += 1
         diretorios.append({
             'caminho': f'analise_boletins/src/boletins/{curso}/',
             'curso': curso
         })
     i = 0
     for df in array_dfs:
+        
         tupla_disciplinas = calc.get_tupla_disciplinas(df)
         # periodo = calc.get_anos(df) # erro aqui
         periodo = [2017, 2018, 2019, 2020]
@@ -70,8 +77,15 @@ def gerar_pdf_final(array_dfs):
         lista_analise_disciplina = []
         lista_analise_anual = []
 
+        total_disciplinas = 0
+        for ano in tupla_disciplinas:
+            total_disciplinas += len(ano)
+
+        contador_disciplina = 0
         for ano in tupla_disciplinas:
             for disciplina in ano:
+                contador_disciplina += 1
+                print(f"Gerando analise: {disciplina[1]} [{contador_disciplina}/{total_disciplinas}]")
                 disciplina_sigla = disciplina[0]
                 disciplina_nome = disciplina[1]
                 ano = disciplina_sigla[-1]

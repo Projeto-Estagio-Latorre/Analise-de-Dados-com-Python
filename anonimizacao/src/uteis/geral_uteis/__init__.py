@@ -13,13 +13,18 @@ def gerar_boletins_anonimizados():
     lista_pastas = f_arquivo.ordenar_pastas(lista_pastas)
 
     for nome_pasta_curso in lista_pastas:
+        print(f"Extraindo dados do curso {nome_pasta_curso}.")
         if os.path.isfile(f'{diretorio_boletins}{nome_pasta_curso}/junçao.csv'):
             os.remove(f'{diretorio_boletins}{nome_pasta_curso}/junçao.csv')
             f_arquivo.apagar_pasta(f'{diretorio_boletins}{nome_pasta_curso}/csv')
             print(f"Os arquivos da análise anterior foram limpos com sucesso.")
 
         lista_arquivos = f_arquivo.obter_arquivos_pasta(f'{diretorio_boletins}{nome_pasta_curso}')
+        contador = 0
         for nome_arquivo in lista_arquivos:
+            contador += 1
+            print(f"Extraindo dados do arquivo {nome_arquivo} [{contador}/{len(lista_arquivos)}]." )
+
             diretorio_atual = diretorio_boletins + nome_pasta_curso
             nome_arquivo = nome_arquivo.replace('.pdf', '')
             
