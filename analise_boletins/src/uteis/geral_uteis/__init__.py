@@ -42,7 +42,7 @@ def formatar_juncao_csv(array_boletim_geral):
 
         df = frmt.renomear_colunas(df)
         df = frmt.deleta_notas(df)
-        df = frmt.remover_linhas_com_hifen(df) # erro aqui
+        # df = frmt.remover_linhas_com_hifen(df) # erro aqui
         df = frmt.parse_coluna_media(df)
         df = frmt.juntar_situacao(df)
         df = frmt.tratar_materia(df)
@@ -64,8 +64,8 @@ def gerar_pdf_final(array_dfs):
     i = 0
     for df in array_dfs:
         tupla_disciplinas = calc.get_tupla_disciplinas(df)
-        periodo = calc.get_anos(df) # erro aqui
-        # periodo = [2017, 2018, 2019, 2020]
+        # periodo = calc.get_anos(df) # erro aqui
+        periodo = [2017, 2018, 2019, 2020]
 
         lista_analise_disciplina = []
         lista_analise_anual = []
@@ -108,7 +108,7 @@ def gerar_pdf_final(array_dfs):
         print('Objetos de analise anual finalizados.')
 
         # codigo colocando em um pdf
-        pdf.gerar_pdf(analise_curso, tupla_disciplinas, diretorio[i]["caminho"])
+        pdf.gerar_pdf(analise_curso, tupla_disciplinas, diretorios[i]["caminho"])
         i += 1
 
 def gerar_analise_boletins():
