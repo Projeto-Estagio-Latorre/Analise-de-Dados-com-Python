@@ -37,10 +37,10 @@ def gerar_boletins_anonimizados():
 
             boletins, relacao = f_anonimizar.anonimizar(boletins)
 
-            boletins.to_csv(f'{diretorio_boletins}{nome_pasta_curso}/csv/{nome_arquivo}_Anonimizado.csv', index=False)
-            relacao.to_csv(f'{diretorio_boletins}{nome_pasta_curso}/csv/Relacao.csv', index=False)
+            # boletins.to_csv(f'{diretorio_boletins}{nome_pasta_curso}/csv/{nome_arquivo}_Anonimizado.csv', index=False)
+            # relacao.to_csv(f'{diretorio_boletins}{nome_pasta_curso}/csv/Relacao.csv', index=False)
             f_df.fechar_arquivo(arquivo)
-            print(f"{nome_arquivo}_Anonimizado.csv anonimizado e finalizado com sucesso")
+            print(f"{nome_arquivo}.csv finalizado com sucesso")
 
 
     print(f"Os dados dos boletins foram extraídos com sucesso em csv.")

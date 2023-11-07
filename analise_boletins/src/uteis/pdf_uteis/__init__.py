@@ -112,37 +112,70 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
     content.append(titulo)
     content.append(Spacer(1, 20))
     count = 1
-    
+
+    total_alunos_analise = 0
     for ano in tupla_disciplinas:
+        total_alunos_ano = 0
+        contador_disciplina = 0
+        for disciplina in ano:
+            analise_disciplina = encontrar_analise(disciplina[0], analise_curso.lista_analise_disciplinas, 'disciplina')
+            total_alunos_disciplina = (analise_disciplina.distribuicao_freq_aprovados['Frequência Absoluta'][3])
+            total_alunos_ano += total_alunos_disciplina
+            contador_disciplina += 1
+
+        if contador_disciplina > 0:
+            total_alunos_ano = total_alunos_ano/contador_disciplina
+            total_alunos_ano = int(total_alunos_ano) if total_alunos_ano.is_integer() else int(total_alunos_ano) + 1
+            total_alunos_analise += total_alunos_ano
+
+    content.append(Paragraph(
+            "Alunos avaliados neste período: " + str(total_alunos_analise) + ".", 
+            ParagraphStyle(name='Name',fontSize=10)))
+
+    for ano in tupla_disciplinas:
+        total_alunos_ano = 0
+        contador_disciplina = 0
+        for disciplina in ano:
+            analise_disciplina = encontrar_analise(disciplina[0], analise_curso.lista_analise_disciplinas, 'disciplina')
+            total_alunos_disciplina = (analise_disciplina.distribuicao_freq_aprovados['Frequência Absoluta'][3])
+            total_alunos_ano += total_alunos_disciplina
+            contador_disciplina += 1
+
+        if contador_disciplina > 0:
+            total_alunos_ano = total_alunos_ano/contador_disciplina
+            total_alunos_ano = int(total_alunos_ano) if total_alunos_ano.is_integer() else int(total_alunos_ano) + 1
+
         content.append(Paragraph(
             "Análise do "+str(count)+"º ano", 
             ParagraphStyle(
                     name='Name',
                     fontName='Helvetica-Bold',
                     fontSize=13)))
+        
+        content.append(Paragraph(
+            "Alunos avaliados neste ano: " + str(total_alunos_ano) + ".", 
+            ParagraphStyle(name='Name',fontSize=10)))
 
         adicionar_marcadores(pdf_file, ano) 
 
         for disciplina in ano:
-            
-            total_alunos_disciplina = (analise_disciplina.distribuicao_freq_aprovados['Frequência Absoluta'][5]) # total de notas -> (total de alunos)
-
             analise_disciplina = encontrar_analise(disciplina[0], analise_curso.lista_analise_disciplinas, 'disciplina')
             
             tabela_distribuicao_freq_aprovados = padronizar_df(analise_disciplina.distribuicao_freq_aprovados)
             
             tabela_distribuicao_freq_notas = padronizar_df(analise_disciplina.distribuicao_freq_notas)
-            
 
+            total_alunos_disciplina = (analise_disciplina.distribuicao_freq_aprovados['Frequência Absoluta'][3]) # total de notas -> (total de alunos)
+            
             textos = [
                 str(analise_disciplina.ano)+"° ano",
-                analise_disciplina.nome + " (" + analise_disciplina.sigla + ")",
-                "Nessa disciplina foram avaliados um total de" + total_alunos_disciplina + " Alunos.",
+                analise_disciplina.nome + " (" + analise_disciplina.sigla + ")",                
                 "Distribuição de frequência de  aprovados e reprovados no componente curricular "+ analise_disciplina.nome + " (" + analise_disciplina.sigla + ")",
                 "Gráfico de setores de aprovados e reprovados usando frequência relativa no componente curricular "+analise_disciplina.sigla,
                 "Distribuição de frequências de notas de alunos no componente curricular "+analise_disciplina.sigla,
                 "Gráfico de barras de notas usando as faixas de notas do componente curricular "+analise_disciplina.sigla,
-                "Distribuição de frequências de aprovação e reprovação dos componentes curriculares do "+str(analise_disciplina.ano)+"º ano"
+                "Distribuição de frequências de aprovação e reprovação dos componentes curriculares do "+str(analise_disciplina.ano)+"º ano",
+                "Alunos avaliados nesta disciplina: " + str(total_alunos_disciplina) + ".",
             ]
 
             imagem = calcularTamanhoImagem(analise_disciplina.grafico_freq_aprovados, doc, 40, 40, 40, 40)
@@ -152,6 +185,8 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
             content.extend([
                 Spacer(1, 12),
                 Paragraph(textos[1],  ParagraphStyle(name='Name',fontName='Helvetica-Bold')),
+                Spacer(1, 12),
+                Paragraph(textos[7], ParagraphStyle(name='Name',fontSize=10)),
                 Spacer(1, 12)
             ])
 
@@ -163,6 +198,7 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
                 Paragraph(textos[2], ParagraphStyle(name='Name', fontSize=9,
                        alignment=TA_CENTER)),
                 Spacer(1, 12),
+                
                 tabela_distribuicao_freq_aprovados,
                 Spacer(1, 12),
                 

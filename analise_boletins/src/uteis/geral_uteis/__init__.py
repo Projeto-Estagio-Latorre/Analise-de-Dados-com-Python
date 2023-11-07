@@ -36,6 +36,19 @@ def gerar_juncao_csv():
         print(f"O arquivo Boletim_Geral.csv do curso {curso} criado com sucesso.")
     return array_boletim_geral
 
+def gerar_array_caminhos():
+    lista_cursos = f_arquivo.obter_pastas_pasta('analise_boletins/src/boletins/')
+    lista_cursos = f_arquivo.ordenar_pastas(lista_cursos)
+    array_boletim_geral = []
+    for curso in lista_cursos:
+        print(f"Coletando dados do Boletins_Anoimizado de {curso}.")
+        diretorio = f'analise_boletins/src/boletins/{curso}/csv/Boletins.csv'
+        # diretorio = f'analise_boletins/src/boletins/{curso}/csv/Boletins_Anonimizado.csv'
+        array_boletim_geral.append(diretorio)
+
+    return array_boletim_geral
+
+
 
 def formatar_juncao_csv(array_boletim_geral):
     # Fazer código para entrada de csvs etc
@@ -126,7 +139,6 @@ def gerar_pdf_final(array_dfs):
         i += 1
 
 def gerar_analise_boletins():
-    array_boletim_geral = gerar_juncao_csv()
+    array_boletim_geral = gerar_array_caminhos()
     array_dfs = formatar_juncao_csv(array_boletim_geral)
     gerar_pdf_final(array_dfs)
-    # print('Análise disponível em resultados.')
