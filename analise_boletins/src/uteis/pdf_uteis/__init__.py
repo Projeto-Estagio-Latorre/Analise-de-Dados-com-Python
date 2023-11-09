@@ -13,6 +13,83 @@ import pdfplumber
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
+def primeiraPagina(canvas, doc, analise_curso, content):
+    canvas.saveState()
+
+    canvas.bookmarkPage(
+        f'Análise do curso {analise_curso.nome} no período de {analise_curso.periodo_analise}'
+        )
+    
+    canvas.addOutlineEntry(
+        f'Análise do curso {analise_curso.nome} no período de {analise_curso.periodo_analise}',
+        f'Análise do curso {analise_curso.nome} no período de {analise_curso.periodo_analise}', 
+        0, 
+        0)
+
+    # for i in range(len(content) - 1):
+    #     if hasattr(content[i], 'text'):
+    #         if 'º' in content[i].text:
+    #             canvas.bookmarkPage(content[i].text)
+    #             canvas.addOutlineEntry(content[i].text, content[i].text, 1, 0)
+
+    #             canvas.bookmarkPage(content[i+2].text)
+    #             canvas.addOutlineEntry(content[i+2].text, content[i+2].text, 2, 0)
+    #             break
+
+    canvas.restoreState()
+
+
+def demaisPaginas(canvas, doc, content):
+
+    canvas.saveState()
+
+    print('TAMANHO CONTENT:', len(content))
+ 
+    for i in range(len(content)):
+        if hasattr(content[i], 'text'):
+            if 'º' in content[i].text:
+                if 'Distribuição de frequências de aprovação e reprovação dos componentes curriculares do' not in content[i].text:
+
+                    if content[i+1].text == 'Alunos avaliados neste ano: 0':
+                            if content[i].text == "Análise do 4º ano" and len(content) < 5:
+                                canvas.bookmarkPage(content[i].text)
+                                canvas.addOutlineEntry(content[i].text, content[i].text, 1, 0) 
+                                break
+                            
+                            elif content[i].text != "Análise do 4º ano":
+                                canvas.bookmarkPage(content[i].text)
+                                canvas.addOutlineEntry(content[i].text, content[i].text, 1, 0) 
+        
+                    else:
+                        canvas.bookmarkPage(content[i].text)
+                        canvas.addOutlineEntry(content[i].text, content[i].text, 1, 0)
+
+                        canvas.bookmarkPage(content[i+3].text)
+                        canvas.addOutlineEntry(content[i+3].text, content[i+3].text, 2, 0)
+            break
+                    # print('\n\n\n')
+                    # print('CONTEÚDO: ',content[i+3])
+
+                    # canvas.bookmarkPage(content[i+3].text)
+                    # canvas.addOutlineEntry(content[i+3].text, content[i+3].text, 2, 0)
+                
+                # código que teoricamente faz marcação do graf final
+                # else:
+                #     canvas.bookmarkPage(content[i].text)
+                #     canvas.addOutlineEntry(content[i].text, content[i].text, 2, 0)
+            
+            
+
+    for elemento in content:
+        if hasattr(elemento, 'style'):
+            if elemento.style.name == 'Disciplina':
+                canvas.bookmarkPage(elemento.text)
+                canvas.addOutlineEntry(elemento.text, elemento.text, 2, 0)
+            break
+
+    canvas.restoreState()
+
+
 def calcularTamanhoImagem(imagem_original, doc, margem_esquerda, margem_direita, margem_superior, margem_inferior):
     
     imagem = PILImage.open(imagem_original)
@@ -186,7 +263,7 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
 
             content.extend([
                 Spacer(1, 12),
-                Paragraph(textos[1],  ParagraphStyle(name='Name',fontName='Helvetica-Bold')),
+                Paragraph(textos[1],  ParagraphStyle(name='Disciplina',fontName='Helvetica-Bold')),
                 Spacer(1, 12),
                 Paragraph(textos[7], ParagraphStyle(name='Name',fontSize=10)),
                 Spacer(1, 12)
@@ -227,14 +304,17 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
             ])     
         
         analise_anual = encontrar_analise(count, analise_curso.lista_analise_anual, 'anual')
-        # imagem3 = calcularTamanhoImagem(analise_anual.distribuicao_freq_aprovados_reprovados, doc, -80, -80, 0, 0)
+        imagem3 = calcularTamanhoImagem(analise_anual.distribuicao_freq_aprovados_reprovados, doc, -80, -80, 0, 0)
 
-        # content.append(Paragraph(textos[6], ParagraphStyle(name='Name', fontSize=9, alignment=TA_CENTER)))
-        # content.append(Spacer(1, 12))
-        # content.append(imagem3)
-        # content.append(PageBreak())
+        content.append(Paragraph(textos[6], ParagraphStyle(name='Name', fontSize=9, alignment=TA_CENTER)))
+        content.append(Spacer(1, 12))
+        content.append(imagem3)
+        content.append(PageBreak())
         count += 1
 
-    doc.build(content)
+    doc.build(content,
+              onFirstPage=lambda canvas, doc: primeiraPagina(
+                  canvas, doc, analise_curso, content),
+              onLaterPages=lambda canvas, doc: demaisPaginas(canvas, doc, content))
     
         
