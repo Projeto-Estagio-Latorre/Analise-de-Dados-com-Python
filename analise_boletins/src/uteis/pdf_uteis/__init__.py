@@ -129,8 +129,10 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
             total_alunos_analise += total_alunos_ano
 
     content.append(Paragraph(
-            "Alunos avaliados neste período: " + str(total_alunos_analise) + ".", 
+            "Alunos avaliados neste período: " + str(total_alunos_analise), 
             ParagraphStyle(name='Name',fontSize=10)))
+
+    content.append(PageBreak())
 
     for ano in tupla_disciplinas:
         total_alunos_ano = 0
@@ -153,7 +155,7 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
                     fontSize=13)))
         
         content.append(Paragraph(
-            "Alunos avaliados neste ano: " + str(total_alunos_ano) + ".", 
+            "Alunos avaliados neste ano: " + str(total_alunos_ano), 
             ParagraphStyle(name='Name',fontSize=10)))
 
         adicionar_marcadores(pdf_file, ano) 
@@ -175,7 +177,7 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
                 "Distribuição de frequências de notas de alunos no componente curricular "+analise_disciplina.sigla,
                 "Gráfico de barras de notas usando as faixas de notas do componente curricular "+analise_disciplina.sigla,
                 "Distribuição de frequências de aprovação e reprovação dos componentes curriculares do "+str(analise_disciplina.ano)+"º ano",
-                "Alunos avaliados nesta disciplina: " + str(total_alunos_disciplina) + ".",
+                "Alunos avaliados nesta disciplina: " + str(total_alunos_disciplina),
             ]
 
             imagem = calcularTamanhoImagem(analise_disciplina.grafico_freq_aprovados, doc, 40, 40, 40, 40)
