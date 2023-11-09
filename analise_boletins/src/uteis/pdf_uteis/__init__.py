@@ -43,7 +43,7 @@ def demaisPaginas(canvas, doc, content):
 
     canvas.saveState()
 
-    print('TAMANHO CONTENT:', len(content))
+    print(f'adicionando marcadores na página {doc.page}')
  
     for i in range(len(content)):
         if hasattr(content[i], 'text'):
