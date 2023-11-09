@@ -44,6 +44,10 @@ def deleta_notas(df):
 
     return df
 
+def ordenar_por_sigla(array):
+    array.sort(key=lambda x: x.sigla)
+    return array
+
 def juntar_situacao(df):
     df.loc[(df['MFD/Conceito'] < 6) & (df['Situação'] == 'Aprovado'), 'Situação'] = 'Aprovado por bloco ou conselho'
     df.loc[(df['Situação'] == 'Aprovado/ Reprovado no Módulo'), 'Situação'] = 'Reprovado'
