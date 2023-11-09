@@ -12,6 +12,15 @@ def ordenar_pastas(lista_pastas):
     lista_pastas.sort()
     return lista_pastas
 
+def pegar_nome_pdf(diretorio):
+    for arquivo in os.listdir(diretorio):
+        if arquivo.endswith('.pdf'):
+            nome_pdf = arquivo[:-4]
+            return nome_pdf
+
+def ordenar_por_sigla(lista_de_objetos):
+    return sorted(lista_de_objetos, key=lambda x: x["sigla"])
+
 def apagar_pasta(pasta):
     if os.path.exists(pasta):
         for nome_arquivo in os.listdir(pasta):

@@ -39,11 +39,13 @@ def gerar_juncao_csv():
 def gerar_array_caminhos():
     lista_cursos = f_arquivo.obter_pastas_pasta('analise_boletins/src/boletins/')
     lista_cursos = f_arquivo.ordenar_pastas(lista_cursos)
+    
     array_boletim_geral = []
     for curso in lista_cursos:
+        nome_pdf = f_arquivo.pegar_nome_pdf(f'analise_boletins/src/boletins/{curso}/')
         print(f"Coletando dados do Boletins_Anoimizado de {curso}.")
-        diretorio = f'analise_boletins/src/boletins/{curso}/csv/Boletins.csv'
-        # diretorio = f'analise_boletins/src/boletins/{curso}/csv/Boletins_Anonimizado.csv'
+        diretorio = f'analise_boletins/src/boletins/{curso}/csv/{nome_pdf}.csv'
+        # diretorio = f'analise_boletins/src/boletins/{curso}/csv/{nome_pdf}_Anonimizado.csv'
         array_boletim_geral.append(diretorio)
 
     return array_boletim_geral
@@ -59,7 +61,7 @@ def formatar_juncao_csv(array_boletim_geral):
 
         df = frmt.renomear_colunas(df)
         df = frmt.deleta_notas(df)
-        # df = frmt.remover_linhas_com_hifen(df) # erro aqui
+        df = frmt.remover_linhas_com_hifen(df) # erro aqui
         df = frmt.parse_coluna_media(df)
         df = frmt.juntar_situacao(df)
         df = frmt.tratar_materia(df)
@@ -84,8 +86,8 @@ def gerar_pdf_final(array_dfs):
     for df in array_dfs:
         
         tupla_disciplinas = calc.get_tupla_disciplinas(df)
-        # periodo = calc.get_anos(df) # erro aqui
-        periodo = [2017, 2018, 2019, 2020]
+        periodo = calc.get_anos(df) # erro aqui
+        #periodo = [2017, 2018, 2019, 2020]
 
         lista_analise_disciplina = []
         lista_analise_anual = []
@@ -118,6 +120,8 @@ def gerar_pdf_final(array_dfs):
                 analise_disciplina = modl.Analise_disciplina(disciplina_sigla, disciplina_nome, ano, estatisticas_descritiva,
                                                             distribuicao_freq_aprovados, grafico_freq_aprovados, distribuicao_freq_notas, grafico_freq_notas)
                 lista_analise_disciplina.append(analise_disciplina)
+
+        # lista_disciplina = frmt.ordenar_por_sigla(lista_analise_disciplina)
 
         print('Objetos de analise disciplina finalizados.')
         print('Gerando objetos de analise anual.')

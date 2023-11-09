@@ -1,4 +1,10 @@
-# Importe os módulos necessários
+import subprocess
+
+libraries = ["pdfplumber", "pandas==2.0.3", "faker", "matplotlib", "reportlab", "pillow"]
+
+for lib in libraries:
+    subprocess.run(["pip", "install", lib])
+
 from anonimizacao.src.uteis import geral_uteis as anonimizar_uteis
 from analise_boletins.src.uteis import geral_uteis as analisar_uteis
 

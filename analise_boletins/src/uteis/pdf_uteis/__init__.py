@@ -227,12 +227,12 @@ def gerar_pdf(analise_curso, tupla_disciplinas, caminho):
             ])     
         
         analise_anual = encontrar_analise(count, analise_curso.lista_analise_anual, 'anual')
-        # imagem3 = calcularTamanhoImagem(analise_anual.distribuicao_freq_aprovados_reprovados, doc, -80, -80, 0, 0)
+        imagem3 = calcularTamanhoImagem(analise_anual.distribuicao_freq_aprovados_reprovados, doc, -80, -80, 0, 0)
 
-        # content.append(Paragraph(textos[6], ParagraphStyle(name='Name', fontSize=9, alignment=TA_CENTER)))
-        # content.append(Spacer(1, 12))
-        # content.append(imagem3)
-        # content.append(PageBreak())
+        content.append(Paragraph(textos[6], ParagraphStyle(name='Name', fontSize=9, alignment=TA_CENTER)))
+        content.append(Spacer(1, 12))
+        content.append(imagem3)
+        content.append(PageBreak())
         count += 1
 
     doc.build(content)
